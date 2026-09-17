@@ -150,6 +150,7 @@ abstract class HorizontalScrollView extends StatelessWidget {
     this.physics,
     this.scrollBehavior,
     this.flexibleHeight = false,
+    this.shrinkWrap = false,
     this.cacheExtent,
     this.semanticChildCount,
     this.dragStartBehavior = DragStartBehavior.start,
@@ -191,6 +192,16 @@ abstract class HorizontalScrollView extends StatelessWidget {
   /// When false (default), the [HorizontalScrollView] sizes itself
   /// to match the tallest currently laid out child.
   final bool flexibleHeight;
+
+  /// Whether the extent of the scroll view should be determined by the contents
+  /// being viewed.
+  ///
+  /// If the scroll view does not shrink wrap, then the scroll view will expand
+  /// to the maximum allowed size. If the scroll view has unbounded constraints
+  /// in the horizontal, then [shrinkWrap] must be true.
+  ///
+  /// Defaults to false.
+  final bool shrinkWrap;
 
   /// {@macro flutter.rendering.RenderViewportBase.cacheExtent}
   final double? cacheExtent;
@@ -276,6 +287,7 @@ abstract class HorizontalScrollView extends StatelessWidget {
       offset: offset,
       slivers: slivers,
       flexibleHeight: flexibleHeight,
+      shrinkWrap: shrinkWrap,
       cacheExtent: cacheExtent,
       clipBehavior: clipBehavior,
     );
@@ -515,6 +527,7 @@ class HorizontalViewport extends MultiChildRenderObjectWidget {
     this.axisDirection = HorizontalAxisDirection.right,
     required this.offset,
     this.flexibleHeight = false,
+    this.shrinkWrap = false,
     this.cacheExtent,
     this.cacheExtentStyle = CacheExtentStyle.pixel,
     this.clipBehavior = Clip.hardEdge,
@@ -552,6 +565,16 @@ class HorizontalViewport extends MultiChildRenderObjectWidget {
   /// to match the tallest currently laid out child.
   final bool flexibleHeight;
 
+  /// Whether the extent of the scroll view should be determined by the contents
+  /// being viewed.
+  ///
+  /// If the scroll view does not shrink wrap, then the scroll view will expand
+  /// to the maximum allowed size. If the scroll view has unbounded constraints
+  /// in the horizontal, then [shrinkWrap] must be true.
+  ///
+  /// Defaults to false.
+  final bool shrinkWrap;
+
   /// {@macro flutter.rendering.RenderViewportBase.cacheExtent}
   ///
   /// See also:
@@ -573,6 +596,7 @@ class HorizontalViewport extends MultiChildRenderObjectWidget {
       axisDirection: axisDirection,
       offset: offset,
       flexibleHeight: flexibleHeight,
+      shrinkWrap: shrinkWrap,
       cacheExtent: cacheExtent,
       cacheExtentStyle: cacheExtentStyle,
       clipBehavior: clipBehavior,
@@ -588,6 +612,7 @@ class HorizontalViewport extends MultiChildRenderObjectWidget {
       ..axisDirection = axisDirection
       ..offset = offset
       ..flexibleHeight = flexibleHeight
+      ..shrinkWrap = shrinkWrap
       ..cacheExtent = cacheExtent
       ..cacheExtentStyle = cacheExtentStyle
       ..clipBehavior = clipBehavior;
@@ -662,28 +687,25 @@ class RenderHorizontalViewport extends RenderBox
     implements RenderAbstractViewport {
   /// Creates a viewport for [RenderSliver] objects.
   ///
-  /// The [offset] must be specified. For testing purposes, consider passing a
+  /// The [_offset] must be specified. For testing purposes, consider passing a
   /// [ViewportOffset.zero] or [ViewportOffset.fixed].
   RenderHorizontalViewport({
-    HorizontalAxisDirection axisDirection = HorizontalAxisDirection.right,
-    required ViewportOffset offset,
+    this._axisDirection = HorizontalAxisDirection.right,
+    required this._offset,
     List<RenderSliver>? children,
-    bool flexibleHeight = false,
+    this._flexibleHeight = false,
+    this._shrinkWrap = false,
     double? cacheExtent,
     CacheExtentStyle cacheExtentStyle = CacheExtentStyle.pixel,
-    Clip clipBehavior = Clip.hardEdge,
+    this._clipBehavior = Clip.hardEdge,
   }) : assert(
          cacheExtentStyle != CacheExtentStyle.viewport || cacheExtent != null,
        ),
        assert(
          cacheExtent != null || cacheExtentStyle == CacheExtentStyle.pixel,
        ),
-       _axisDirection = axisDirection,
-       _offset = offset,
-       _flexibleHeight = flexibleHeight,
        _cacheExtent = cacheExtent ?? RenderAbstractViewport.defaultCacheExtent,
-       _cacheExtentStyle = cacheExtentStyle,
-       _clipBehavior = clipBehavior {
+       _cacheExtentStyle = cacheExtentStyle {
     addAll(children);
   }
 
@@ -776,6 +798,17 @@ class RenderHorizontalViewport extends RenderBox
       return;
     }
     _flexibleHeight = value;
+    markNeedsLayout();
+  }
+
+  /// Whether to enable shrink wrap behavior.
+  bool get shrinkWrap => _shrinkWrap;
+  bool _shrinkWrap;
+  set shrinkWrap(bool value) {
+    if (value == _shrinkWrap) {
+      return;
+    }
+    _shrinkWrap = value;
     markNeedsLayout();
   }
 
@@ -955,7 +988,7 @@ class RenderHorizontalViewport extends RenderBox
     final int maxLayoutCycles = _maxLayoutCyclesPerChild * childCount;
 
     double correction;
-    double effectiveExtent;
+    double effectiveExtent = 0;
     int count = 0;
     do {
       correction = _attemptLayout(
@@ -1006,7 +1039,9 @@ class RenderHorizontalViewport extends RenderBox
     }());
 
     size = Size(
-      constraints.maxWidth,
+      shrinkWrap
+          ? constraints.constrainWidth(effectiveExtent)
+          : constraints.maxWidth,
       constraints.constrainHeight(_maxCrossAxisExtent),
     );
   }
@@ -1915,6 +1950,7 @@ class HorizontalListView extends HorizontalScrollView {
     super.controller,
     super.physics,
     super.flexibleHeight,
+    super.shrinkWrap,
     this.padding,
     this.prototypeItem,
     bool addAutomaticKeepAlives = true,
@@ -1972,6 +2008,7 @@ class HorizontalListView extends HorizontalScrollView {
     super.controller,
     super.physics,
     super.flexibleHeight,
+    super.shrinkWrap,
     this.padding,
     this.prototypeItem,
     required NullableIndexedWidgetBuilder itemBuilder,
@@ -2038,6 +2075,7 @@ class HorizontalListView extends HorizontalScrollView {
     super.controller,
     super.physics,
     super.flexibleHeight,
+    super.shrinkWrap,
     this.padding,
     required NullableIndexedWidgetBuilder itemBuilder,
     ChildIndexGetter? findChildIndexCallback,
@@ -2083,6 +2121,7 @@ class HorizontalListView extends HorizontalScrollView {
     super.controller,
     super.physics,
     super.flexibleHeight,
+    super.shrinkWrap,
     this.padding,
     this.prototypeItem,
     required this.childrenDelegate,
@@ -2236,11 +2275,10 @@ class _RenderSliverPadding extends RenderSliver
   /// The [padding] argument must have non-negative insets.
   _RenderSliverPadding({
     required EdgeInsetsGeometry padding,
-    TextDirection? textDirection,
+    this._textDirection,
     RenderSliver? child,
   }) : assert(padding.isNonNegative),
-       _padding = padding,
-       _textDirection = textDirection {
+       _padding = padding {
     this.child = child;
   }
 
