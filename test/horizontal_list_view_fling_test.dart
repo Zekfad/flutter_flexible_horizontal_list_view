@@ -23,10 +23,17 @@ void main() {
     );
 
     double getCurrentOffset() {
-      return tester.state<ScrollableState>(find.byType(Scrollable)).position.pixels;
+      return tester
+          .state<ScrollableState>(find.byType(Scrollable))
+          .position
+          .pixels;
     }
 
-    await tester.fling(find.byType(HorizontalListView), const Offset(-kFlingOffset, 0.0), 1000.0);
+    await tester.fling(
+      find.byType(HorizontalListView),
+      const Offset(-kFlingOffset, 0.0),
+      1000.0,
+    );
     expect(getCurrentOffset(), kFlingOffset);
     await tester.pump(); // process the up event
     while (tester.binding.transientCallbackCount > 0) {

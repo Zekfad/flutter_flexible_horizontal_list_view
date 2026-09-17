@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flexible_horizontal_list_view/src/horizontal_list_view.dart';
 
 class TestItem extends StatelessWidget {
-  const TestItem({ super.key, required this.item, this.width });
+  const TestItem({super.key, required this.item, this.width});
   final int item;
   final double? width;
   @override
@@ -22,7 +22,7 @@ class TestItem extends StatelessWidget {
   }
 }
 
-Widget buildFrame({ int? count, double? width, Key? prototypeKey }) {
+Widget buildFrame({int? count, double? width, Key? prototypeKey}) {
   return Directionality(
     textDirection: TextDirection.ltr,
     child: HorizontalListView.custom(
@@ -36,7 +36,9 @@ Widget buildFrame({ int? count, double? width, Key? prototypeKey }) {
 }
 
 void main() {
-  testWidgets('HorizontalListView horizontal scrolling basics', (WidgetTester tester) async {
+  testWidgets('HorizontalListView horizontal scrolling basics', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(buildFrame(count: 20, width: 100.0));
 
     // The viewport is 800 pixels wide, lazily created items are 100 pixels wide.
@@ -62,7 +64,9 @@ void main() {
     }
   });
 
-  testWidgets('HorizontalListView change the prototype item', (WidgetTester tester) async {
+  testWidgets('HorizontalListView change the prototype item', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(buildFrame(count: 10, width: 80.0));
 
     // The viewport is 800 pixels wide, each of the 10 items is 80 pixels wide
@@ -88,9 +92,15 @@ void main() {
     }
   });
 
-  testWidgets('HorizontalListView first item is also the prototype', (WidgetTester tester) async {
+  testWidgets('HorizontalListView first item is also the prototype', (
+    WidgetTester tester,
+  ) async {
     final List<Widget> items = List<Widget>.generate(10, (int index) {
-      return TestItem(key: ValueKey<int>(index), item: index, width: index == 0 ? 60.0 : null);
+      return TestItem(
+        key: ValueKey<int>(index),
+        item: index,
+        width: index == 0 ? 60.0 : null,
+      );
     }).toList();
 
     await tester.pumpWidget(
@@ -107,7 +117,10 @@ void main() {
     );
 
     // Item 0 exists in the list and as the prototype item.
-    expect(tester.widgetList(find.text('Item 0', skipOffstage: false)).length, 2);
+    expect(
+      tester.widgetList(find.text('Item 0', skipOffstage: false)).length,
+      2,
+    );
 
     for (int i = 1; i < 10; i += 1) {
       expect(find.text('Item $i'), findsOneWidget);

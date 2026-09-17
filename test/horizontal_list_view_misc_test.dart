@@ -9,7 +9,9 @@ import 'package:flexible_horizontal_list_view/flexible_horizontal_list_view.dart
 const Key blockKey = Key('test');
 
 void main() {
-  testWidgets('Cannot scroll a non-overflowing block', (WidgetTester tester) async {
+  testWidgets('Cannot scroll a non-overflowing block', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -63,7 +65,10 @@ void main() {
 
     await tester.pump(); // redo layout
 
-    expect(tester.getCenter(find.text('Hello')), isNot(equals(middleOfContainer)));
+    expect(
+      tester.getCenter(find.text('Hello')),
+      isNot(equals(middleOfContainer)),
+    );
 
     await gesture.up();
   });
@@ -150,7 +155,9 @@ void main() {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
-        child: CustomScrollView(slivers: <Widget>[SliverList(delegate: delegate)]),
+        child: CustomScrollView(
+          slivers: <Widget>[SliverList(delegate: delegate)],
+        ),
       ),
     );
 

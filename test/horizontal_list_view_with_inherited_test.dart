@@ -33,7 +33,9 @@ Widget buildFrame() {
 }
 
 void main() {
-  testWidgets('HorizontalListView is a build function (smoketest)', (WidgetTester tester) async {
+  testWidgets('HorizontalListView is a build function (smoketest)', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(buildFrame());
     expect(find.text('one'), findsOneWidget);
     expect(find.text('two'), findsOneWidget);

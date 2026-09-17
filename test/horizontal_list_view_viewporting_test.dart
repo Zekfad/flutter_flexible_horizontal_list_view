@@ -10,7 +10,9 @@ import 'package:flexible_horizontal_list_view/src/unconstrained_sliver_list.dart
 import 'test_widgets.dart';
 
 void main() {
-  testWidgets('HorizontalListView mount/dismount smoke test', (WidgetTester tester) async {
+  testWidgets('HorizontalListView mount/dismount smoke test', (
+    WidgetTester tester,
+  ) async {
     final List<int> callbackTracker = <int>[];
 
     // the root view is 800x600 in the test environment
@@ -23,7 +25,11 @@ void main() {
           left: HorizontalListView.builder(
             itemBuilder: (BuildContext context, int index) {
               callbackTracker.add(index);
-              return SizedBox(key: ValueKey<int>(index), width: 100.0, child: Text('$index'));
+              return SizedBox(
+                key: ValueKey<int>(index),
+                width: 100.0,
+                child: Text('$index'),
+              );
             },
           ),
           right: const Text('Not Today'),
@@ -62,7 +68,9 @@ void main() {
     );
   });
 
-  testWidgets('HorizontalListView initial offset at 300 pixels', (WidgetTester tester) async {
+  testWidgets('HorizontalListView initial offset at 300 pixels', (
+    WidgetTester tester,
+  ) async {
     final List<int> callbackTracker = <int>[];
 
     // the root view is 800x600 in the test environment
@@ -80,13 +88,18 @@ void main() {
     }
 
     Widget builder() {
-      final ScrollController controller = ScrollController(initialScrollOffset: 300.0);
+      final ScrollController controller = ScrollController(
+        initialScrollOffset: 300.0,
+      );
       addTearDown(controller.dispose);
 
       return Directionality(
         textDirection: TextDirection.ltr,
         child: FlipWidget(
-          left: HorizontalListView.builder(controller: controller, itemBuilder: itemBuilder),
+          left: HorizontalListView.builder(
+            controller: controller,
+            itemBuilder: itemBuilder,
+          ),
           right: const Text('Not Today'),
         ),
       );
@@ -115,7 +128,7 @@ void main() {
       equals(<int>[
         0, 1, 2,
         3, 4, 5, 6, //visible
-        7, 8
+        7, 8,
       ]),
     );
     callbackTracker.clear();
@@ -128,13 +141,15 @@ void main() {
       equals(<int>[
         1, 2,
         3, 4, 5, 6, // visible
-        7, 8
+        7, 8,
       ]),
     );
     callbackTracker.clear();
   });
 
-  testWidgets('HorizontalListView initial offset at 500 pixels', (WidgetTester tester) async {
+  testWidgets('HorizontalListView initial offset at 500 pixels', (
+    WidgetTester tester,
+  ) async {
     final List<int> callbackTracker = <int>[];
 
     // the root view is 800x600 in the test environment
@@ -152,7 +167,9 @@ void main() {
     }
 
     Widget builder() {
-      final ScrollController controller = ScrollController(initialScrollOffset: 500.0);
+      final ScrollController controller = ScrollController(
+        initialScrollOffset: 500.0,
+      );
       addTearDown(controller.dispose);
 
       return Directionality(
@@ -174,7 +191,7 @@ void main() {
       callbackTracker,
       equals(<int>[
         0, 1, 2, 3, 4, 5, 6,
-        7 // in cached area
+        7, // in cached area
       ]),
     );
 
@@ -190,7 +207,7 @@ void main() {
       callbackTracker,
       equals(<int>[
         1, 2, 3, 4, 5, 6,
-        7, 8 // in cached area
+        7, 8, // in cached area
       ]),
     );
     callbackTracker.clear();
@@ -202,13 +219,15 @@ void main() {
       callbackTracker,
       equals(<int>[
         1, 2, 3, 4, 5, 6,
-        7, 8 // in cached area
+        7, 8, // in cached area
       ]),
     );
     callbackTracker.clear();
   });
 
-  testWidgets('HorizontalListView reinvoke builders', (WidgetTester tester) async {
+  testWidgets('HorizontalListView reinvoke builders', (
+    WidgetTester tester,
+  ) async {
     final List<int> callbackTracker = <int>[];
     final List<String?> text = <String?>[];
 
@@ -264,7 +283,9 @@ void main() {
     text.clear();
   });
 
-  testWidgets('HorizontalListView reinvoke builders', (WidgetTester tester) async {
+  testWidgets('HorizontalListView reinvoke builders', (
+    WidgetTester tester,
+  ) async {
     late StateSetter setState;
     ThemeData themeData = ThemeData.light(useMaterial3: false);
 
@@ -278,7 +299,9 @@ void main() {
       );
     }
 
-    final Widget viewport = HorizontalListView.builder(itemBuilder: itemBuilder);
+    final Widget viewport = HorizontalListView.builder(
+      itemBuilder: itemBuilder,
+    );
 
     await tester.pumpWidget(
       Directionality(
@@ -305,7 +328,9 @@ void main() {
     expect(widget.color, equals(Colors.green));
   });
 
-  testWidgets('HorizontalListView underflow extents', (WidgetTester tester) async {
+  testWidgets('HorizontalListView underflow extents', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -321,7 +346,9 @@ void main() {
       ),
     );
 
-    final RenderUnconstrainedSliverList list = tester.renderObject(find.byType(UnconstrainedSliverList));
+    final RenderUnconstrainedSliverList list = tester.renderObject(
+      find.byType(UnconstrainedSliverList),
+    );
 
     expect(list.indexOf(list.firstChild!), equals(0));
     expect(list.indexOf(list.lastChild!), equals(2));
@@ -434,15 +461,21 @@ void main() {
       ),
     );
 
-    final ScrollPosition position = tester.state<ScrollableState>(find.byType(Scrollable)).position;
+    final ScrollPosition position = tester
+        .state<ScrollableState>(find.byType(Scrollable))
+        .position;
 
     expect(position.viewportDimension, equals(800.0));
     expect(position.minScrollExtent, equals(0.0));
   });
 
-  testWidgets('HorizontalListView should not paint hidden children', (WidgetTester tester) async {
+  testWidgets('HorizontalListView should not paint hidden children', (
+    WidgetTester tester,
+  ) async {
     const Text text = Text('test');
-    final ScrollController controller = ScrollController(initialScrollOffset: 300.0);
+    final ScrollController controller = ScrollController(
+      initialScrollOffset: 300.0,
+    );
     addTearDown(controller.dispose);
 
     await tester.pumpWidget(
@@ -470,7 +503,9 @@ void main() {
       ),
     );
 
-    final RenderUnconstrainedSliverList list = tester.renderObject(find.byType(UnconstrainedSliverList));
+    final RenderUnconstrainedSliverList list = tester.renderObject(
+      find.byType(UnconstrainedSliverList),
+    );
     expect(list, paintsExactlyCountTimes(#drawParagraph, 2));
   });
 }

@@ -7,52 +7,65 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flexible_horizontal_list_view/src/horizontal_list_view.dart';
 
 void main() {
-  testWidgets('HorizontalListView.builder 30 items with big jump, using prototypeItem', (
-    WidgetTester tester,
-  ) async {
-    final List<int> callbackTracker = <int>[];
+  testWidgets(
+    'HorizontalListView.builder 30 items with big jump, using prototypeItem',
+    (WidgetTester tester) async {
+      final List<int> callbackTracker = <int>[];
 
-    // The root view is 800x600 in the test environment and our list
-    // items are 400 wide. Scrolling should cause two or three items
-    // to be built.
+      // The root view is 800x600 in the test environment and our list
+      // items are 400 wide. Scrolling should cause two or three items
+      // to be built.
 
-    Widget itemBuilder(BuildContext context, int index) {
-      callbackTracker.add(index);
-      return Text('$index', key: ValueKey<int>(index), textDirection: TextDirection.ltr);
-    }
+      Widget itemBuilder(BuildContext context, int index) {
+        callbackTracker.add(index);
+        return Text(
+          '$index',
+          key: ValueKey<int>(index),
+          textDirection: TextDirection.ltr,
+        );
+      }
 
-    final Widget testWidget = Directionality(
-      textDirection: TextDirection.ltr,
-      child: HorizontalListView.builder(
-        itemBuilder: itemBuilder,
-        prototypeItem: const SizedBox(width: 400, height: 600),
-        itemCount: 30,
-      ),
-    );
+      final Widget testWidget = Directionality(
+        textDirection: TextDirection.ltr,
+        child: HorizontalListView.builder(
+          itemBuilder: itemBuilder,
+          prototypeItem: const SizedBox(width: 400, height: 600),
+          itemCount: 30,
+        ),
+      );
 
-    void jumpTo(double newScrollOffset) {
-      final ScrollableState scrollable = tester.state(find.byType(Scrollable));
-      scrollable.position.jumpTo(newScrollOffset);
-    }
+      void jumpTo(double newScrollOffset) {
+        final ScrollableState scrollable = tester.state(
+          find.byType(Scrollable),
+        );
+        scrollable.position.jumpTo(newScrollOffset);
+      }
 
-    await tester.pumpWidget(testWidget);
+      await tester.pumpWidget(testWidget);
 
-    // 2 is in the cache area, but not visible.
-    expect(callbackTracker, equals(<int>[0, 1, 2]));
-    final List<int> initialExpectedHidden = List<int>.generate(28, (int i) => i + 2);
-    check(visible: <int>[0, 1], hidden: initialExpectedHidden);
-    callbackTracker.clear();
+      // 2 is in the cache area, but not visible.
+      expect(callbackTracker, equals(<int>[0, 1, 2]));
+      final List<int> initialExpectedHidden = List<int>.generate(
+        28,
+        (int i) => i + 2,
+      );
+      check(visible: <int>[0, 1], hidden: initialExpectedHidden);
+      callbackTracker.clear();
 
-    // Jump to the end of the HorizontalListView.
-    jumpTo(400 * 30 - 400 * 2); // 11_200
-    await tester.pump();
+      // Jump to the end of the HorizontalListView.
+      jumpTo(400 * 30 - 400 * 2); // 11_200
+      await tester.pump();
 
-    // 27 is in the cache area, but not visible.
-    expect(callbackTracker, equals(<int>[27, 28, 29]));
-    final List<int> finalExpectedHidden = List<int>.generate(28, (int i) => i);
-    check(visible: <int>[28, 29], hidden: finalExpectedHidden);
-    callbackTracker.clear();
-  });
+      // 27 is in the cache area, but not visible.
+      expect(callbackTracker, equals(<int>[27, 28, 29]));
+      final List<int> finalExpectedHidden = List<int>.generate(
+        28,
+        (int i) => i,
+      );
+      check(visible: <int>[28, 29], hidden: finalExpectedHidden);
+      callbackTracker.clear();
+    },
+  );
 
   testWidgets('HorizontalListView.separated', (WidgetTester tester) async {
     Widget buildFrame({required int itemCount}) {
@@ -109,7 +122,9 @@ void main() {
     expect(find.text('i8'), findsNothing);
   });
 
-  testWidgets('HorizontalListView.separated uses correct semanticChildCount', (WidgetTester tester) async {
+  testWidgets('HorizontalListView.separated uses correct semanticChildCount', (
+    WidgetTester tester,
+  ) async {
     Widget buildFrame({required int itemCount}) {
       return Directionality(
         textDirection: TextDirection.ltr,
@@ -127,7 +142,10 @@ void main() {
 
     Scrollable scrollable() {
       return tester.widget<Scrollable>(
-        find.descendant(of: find.byType(HorizontalListView), matching: find.byType(Scrollable)),
+        find.descendant(
+          of: find.byType(HorizontalListView),
+          matching: find.byType(Scrollable),
+        ),
       );
     }
 
@@ -148,7 +166,10 @@ void main() {
   });
 }
 
-void check({List<int> visible = const <int>[], List<int> hidden = const <int>[]}) {
+void check({
+  List<int> visible = const <int>[],
+  List<int> hidden = const <int>[],
+}) {
   for (final int i in visible) {
     expect(find.text('$i'), findsOneWidget);
   }

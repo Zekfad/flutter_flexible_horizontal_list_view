@@ -17,7 +17,8 @@ class Alive extends StatefulWidget {
   AliveState createState() => AliveState();
 
   @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) => '$index $alive';
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) =>
+      '$index $alive';
 }
 
 class AliveState extends State<Alive> with AutomaticKeepAliveClientMixin {
@@ -66,7 +67,9 @@ class _StatefulListViewState extends State<_StatefulListView> {
 
 void main() {
   // Regression test for https://github.com/flutter/flutter/issues/100451
-  testWidgets('HorizontalListView.builder respects findChildIndexCallback', (WidgetTester tester) async {
+  testWidgets('HorizontalListView.builder respects findChildIndexCallback', (
+    WidgetTester tester,
+  ) async {
     bool finderCalled = false;
     int itemCount = 7;
     late StateSetter stateSetter;
@@ -100,7 +103,9 @@ void main() {
   });
 
   // Regression test for https://github.com/flutter/flutter/issues/100451
-  testWidgets('HorizontalListView.separator respects findChildIndexCallback', (WidgetTester tester) async {
+  testWidgets('HorizontalListView.separator respects findChildIndexCallback', (
+    WidgetTester tester,
+  ) async {
     bool finderCalled = false;
     int itemCount = 7;
     late StateSetter stateSetter;
@@ -134,7 +139,9 @@ void main() {
     expect(finderCalled, true);
   });
 
-  testWidgets('HorizontalListView default control', (WidgetTester tester) async {
+  testWidgets('HorizontalListView default control', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -143,7 +150,9 @@ void main() {
     );
   });
 
-  testWidgets('HorizontalListView can build out of overflow padding', (WidgetTester tester) async {
+  testWidgets('HorizontalListView can build out of overflow padding', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -151,7 +160,9 @@ void main() {
           child: SizedBox.shrink(
             child: HorizontalListView(
               padding: const EdgeInsets.all(8.0),
-              children: const <Widget>[Text('padded', textDirection: TextDirection.ltr)],
+              children: const <Widget>[
+                Text('padded', textDirection: TextDirection.ltr),
+              ],
             ),
           ),
         ),
@@ -160,7 +171,9 @@ void main() {
     expect(find.text('padded', skipOffstage: false), findsOneWidget);
   });
 
-  testWidgets('HorizontalListView automatically pad MediaQuery on axis', (WidgetTester tester) async {
+  testWidgets('HorizontalListView automatically pad MediaQuery on axis', (
+    WidgetTester tester,
+  ) async {
     EdgeInsets? innerMediaQueryPadding;
 
     await tester.pumpWidget(
@@ -188,32 +201,33 @@ void main() {
     expect(innerMediaQueryPadding, const EdgeInsets.symmetric(vertical: 30.0));
   });
 
-  testWidgets('HorizontalListView clips if overflow is smaller than cacheExtent', (
-    WidgetTester tester,
-  ) async {
-    // Regression test for https://github.com/flutter/flutter/issues/17426.
+  testWidgets(
+    'HorizontalListView clips if overflow is smaller than cacheExtent',
+    (WidgetTester tester) async {
+      // Regression test for https://github.com/flutter/flutter/issues/17426.
 
-    await tester.pumpWidget(
-      Directionality(
-        textDirection: TextDirection.ltr,
-        child: Center(
-          child: SizedBox(
-            width: 200.0,
-            child: HorizontalListView(
-              cacheExtent: 500.0,
-              children: <Widget>[
-                Container(width: 90.0),
-                Container(width: 110.0),
-                Container(width: 80.0),
-              ],
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Center(
+            child: SizedBox(
+              width: 200.0,
+              child: HorizontalListView(
+                cacheExtent: 500.0,
+                children: <Widget>[
+                  Container(width: 90.0),
+                  Container(width: 110.0),
+                  Container(width: 80.0),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(find.byType(HorizontalViewport), paints..clipRect());
-  });
+      expect(find.byType(HorizontalViewport), paints..clipRect());
+    },
+  );
 
   testWidgets(
     'HorizontalListView allows touch on children when reaching an edge and over-scrolling / settling',
@@ -248,7 +262,11 @@ void main() {
       expect(tapped, isTrue);
       tapped = false;
 
-      await tester.fling(find.byType(HorizontalListView), const Offset(80.0, 0.0), 1000.0);
+      await tester.fling(
+        find.byType(HorizontalListView),
+        const Offset(80.0, 0.0),
+        1000.0,
+      );
       // Pump a few frames to ensure the scrollable is in an over-scrolled state
       for (int i = 0; i < 5; i++) {
         await tester.pump(frame);
@@ -280,7 +298,11 @@ void main() {
       await tester.pumpAndSettle();
 
       // Strong fling down, to over-scroll the list at the top
-      await tester.fling(find.byType(HorizontalListView), const Offset(500.0, 0.0), 5000.0);
+      await tester.fling(
+        find.byType(HorizontalListView),
+        const Offset(500.0, 0.0),
+        5000.0,
+      );
 
       for (int i = 0; i < 5; i++) {
         await tester.pump(frame);
@@ -308,73 +330,77 @@ void main() {
     },
   );
 
-  testWidgets('HorizontalListView absorbs touch to stop scrolling when not at the edge', (
+  testWidgets(
+    'HorizontalListView absorbs touch to stop scrolling when not at the edge',
+    (WidgetTester tester) async {
+      bool tapped = false;
+      final ScrollController controller = ScrollController();
+      addTearDown(controller.dispose);
+
+      const Duration frame = Duration(milliseconds: 16);
+
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: HorizontalListView.builder(
+            controller: controller,
+            physics: const BouncingScrollPhysics(),
+            itemCount: 15,
+            itemBuilder: (BuildContext context, int index) {
+              return GestureDetector(
+                onTap: () {
+                  tapped = true;
+                },
+                child: SizedBox(width: 100.0, child: Text('Item $index')),
+              );
+            },
+          ),
+        ),
+      );
+
+      // Jump somewhere in the middle of the list
+      controller.jumpTo(101.0);
+      expect(controller.offset, equals(101.0));
+
+      // Tap on an item, it should register the tap
+      await tester.tap(find.text('Item 3'));
+      expect(tapped, isTrue);
+      tapped = false;
+
+      // Fling the list, it should start scrolling. Bot not to the edge
+      await tester.fling(
+        find.byType(HorizontalListView),
+        const Offset(100.0, 0.0),
+        1000.0,
+      );
+
+      await tester.pump(frame);
+
+      final double offset = controller.offset;
+
+      // Ensure we are somewhere between 0 and the starting offset
+      expect(controller.offset, lessThan(101.0));
+      expect(controller.offset, greaterThan(0.0));
+
+      await tester.tap(find.text('Item 2'), warnIfMissed: false); // The tap should be absorbed by the HorizontalListView. Therefore warnIfMissed is set to false
+      expect(tapped, isFalse);
+
+      // Ensure the scrollable stops in place and doesn't scroll further
+      await tester.pump(frame);
+      expect(offset, equals(controller.offset));
+      await tester.pumpAndSettle();
+      expect(offset, equals(controller.offset));
+
+      // Tapping on an item should register the tap normally, as the scrollable is idle
+      await tester.tap(find.text('Item 2'));
+      expect(tapped, isTrue);
+      tapped = false;
+    },
+  );
+
+  testWidgets('HorizontalListView does not clips if no overflow', (
     WidgetTester tester,
   ) async {
-    bool tapped = false;
-    final ScrollController controller = ScrollController();
-    addTearDown(controller.dispose);
-
-    const Duration frame = Duration(milliseconds: 16);
-
-    await tester.pumpWidget(
-      Directionality(
-        textDirection: TextDirection.ltr,
-        child: HorizontalListView.builder(
-          controller: controller,
-          physics: const BouncingScrollPhysics(),
-          itemCount: 15,
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () {
-                tapped = true;
-              },
-              child: SizedBox(width: 100.0, child: Text('Item $index')),
-            );
-          },
-        ),
-      ),
-    );
-
-    // Jump somewhere in the middle of the list
-    controller.jumpTo(101.0);
-    expect(controller.offset, equals(101.0));
-
-    // Tap on an item, it should register the tap
-    await tester.tap(find.text('Item 3'));
-    expect(tapped, isTrue);
-    tapped = false;
-
-    // Fling the list, it should start scrolling. Bot not to the edge
-    await tester.fling(find.byType(HorizontalListView), const Offset(100.0, 0.0), 1000.0);
-
-    await tester.pump(frame);
-
-    final double offset = controller.offset;
-
-    // Ensure we are somewhere between 0 and the starting offset
-    expect(controller.offset, lessThan(101.0));
-    expect(controller.offset, greaterThan(0.0));
-
-    await tester.tap(
-      find.text('Item 2'),
-      warnIfMissed: false,
-    ); // The tap should be absorbed by the HorizontalListView. Therefore warnIfMissed is set to false
-    expect(tapped, isFalse);
-
-    // Ensure the scrollable stops in place and doesn't scroll further
-    await tester.pump(frame);
-    expect(offset, equals(controller.offset));
-    await tester.pumpAndSettle();
-    expect(offset, equals(controller.offset));
-
-    // Tapping on an item should register the tap normally, as the scrollable is idle
-    await tester.tap(find.text('Item 2'));
-    expect(tapped, isTrue);
-    tapped = false;
-  });
-
-  testWidgets('HorizontalListView does not clips if no overflow', (WidgetTester tester) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -383,9 +409,7 @@ void main() {
             width: 200.0,
             child: HorizontalListView(
               cacheExtent: 500.0,
-              children: const <Widget>[
-                SizedBox(width: 100.0),
-              ],
+              children: const <Widget>[SizedBox(width: 100.0)],
             ),
           ),
         ),
@@ -395,7 +419,9 @@ void main() {
     expect(find.byType(Viewport), isNot(paints..clipRect()));
   });
 
-  testWidgets('HorizontalListView respects clipBehavior', (WidgetTester tester) async {
+  testWidgets('HorizontalListView respects clipBehavior', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -404,7 +430,9 @@ void main() {
     );
 
     // 1st, check that the render object has received the default clip behavior.
-    final RenderHorizontalViewport renderObject = tester.allRenderObjects.whereType<RenderHorizontalViewport>().first;
+    final RenderHorizontalViewport renderObject = tester.allRenderObjects
+        .whereType<RenderHorizontalViewport>()
+        .first;
     expect(renderObject.clipBehavior, equals(Clip.hardEdge));
 
     // 2nd, check that the painting context has received the default clip behavior.
@@ -430,7 +458,9 @@ void main() {
     context.dispose();
   });
 
-  testWidgets('HorizontalListView.builder respects clipBehavior', (WidgetTester tester) async {
+  testWidgets('HorizontalListView.builder respects clipBehavior', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -441,11 +471,15 @@ void main() {
         ),
       ),
     );
-    final RenderHorizontalViewport renderObject = tester.allRenderObjects.whereType<RenderHorizontalViewport>().first;
+    final RenderHorizontalViewport renderObject = tester.allRenderObjects
+        .whereType<RenderHorizontalViewport>()
+        .first;
     expect(renderObject.clipBehavior, equals(Clip.antiAlias));
   });
 
-  testWidgets('HorizontalListView.custom respects clipBehavior', (WidgetTester tester) async {
+  testWidgets('HorizontalListView.custom respects clipBehavior', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -458,11 +492,15 @@ void main() {
         ),
       ),
     );
-    final RenderHorizontalViewport renderObject = tester.allRenderObjects.whereType<RenderHorizontalViewport>().first;
+    final RenderHorizontalViewport renderObject = tester.allRenderObjects
+        .whereType<RenderHorizontalViewport>()
+        .first;
     expect(renderObject.clipBehavior, equals(Clip.antiAlias));
   });
 
-  testWidgets('HorizontalListView.separated respects clipBehavior', (WidgetTester tester) async {
+  testWidgets('HorizontalListView.separated respects clipBehavior', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       Directionality(
         textDirection: TextDirection.ltr,
@@ -474,7 +512,9 @@ void main() {
         ),
       ),
     );
-    final RenderHorizontalViewport renderObject = tester.allRenderObjects.whereType<RenderHorizontalViewport>().first;
+    final RenderHorizontalViewport renderObject = tester.allRenderObjects
+        .whereType<RenderHorizontalViewport>()
+        .first;
     expect(renderObject.clipBehavior, equals(Clip.antiAlias));
   });
 }

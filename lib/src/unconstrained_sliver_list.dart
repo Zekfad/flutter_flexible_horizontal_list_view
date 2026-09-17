@@ -38,7 +38,8 @@ class UnconstrainedSliverList extends SliverMultiBoxAdaptorWidget {
 
   @override
   RenderUnconstrainedSliverList createRenderObject(BuildContext context) {
-    final SliverMultiBoxAdaptorElement element = context as SliverMultiBoxAdaptorElement;
+    final SliverMultiBoxAdaptorElement element =
+        context as SliverMultiBoxAdaptorElement;
     return RenderUnconstrainedSliverList(childManager: element);
   }
 }
@@ -78,7 +79,8 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
     childManager.didStartLayout();
     childManager.setDidUnderflow(false);
 
-    final double scrollOffset = constraints.scrollOffset + constraints.cacheOrigin;
+    final double scrollOffset =
+        constraints.scrollOffset + constraints.cacheOrigin;
     assert(scrollOffset >= 0.0);
     final double remainingExtent = constraints.remainingCacheExtent;
     assert(remainingExtent >= 0.0);
@@ -144,7 +146,8 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
     // offset.
     if (childScrollOffset(firstChild!) == null) {
       int leadingChildrenWithoutLayoutOffset = 0;
-      while (earliestUsefulChild != null && childScrollOffset(earliestUsefulChild) == null) {
+      while (earliestUsefulChild != null &&
+          childScrollOffset(earliestUsefulChild) == null) {
         earliestUsefulChild = childAfter(earliestUsefulChild);
         leadingChildrenWithoutLayoutOffset += 1;
       }
@@ -170,7 +173,10 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
       earliestScrollOffset = childScrollOffset(earliestUsefulChild)!
     ) {
       // We have to add children before the earliestUsefulChild.
-      earliestUsefulChild = insertAndLayoutLeadingChild(childConstraints, parentUsesSize: true);
+      earliestUsefulChild = insertAndLayoutLeadingChild(
+        childConstraints,
+        parentUsesSize: true,
+      );
       if (earliestUsefulChild == null) {
         final SliverMultiBoxAdaptorParentData childParentData =
             firstChild!.parentData! as SliverMultiBoxAdaptorParentData;
@@ -184,7 +190,10 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
           earliestUsefulChild = firstChild;
           leadingChildWithLayout = earliestUsefulChild;
           trailingChildWithLayout ??= earliestUsefulChild;
-          childCrossAxisExtent = math.max(childCrossAxisExtent, earliestUsefulChild?.size.height ?? 0.0);
+          childCrossAxisExtent = math.max(
+            childCrossAxisExtent,
+            earliestUsefulChild?.size.height ?? 0.0,
+          );
           break;
         } else {
           // We ran out of children before reaching the scroll offset.
@@ -195,12 +204,15 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
         }
       }
 
-      final double firstChildScrollOffset = earliestScrollOffset - paintExtentOf(firstChild!);
+      final double firstChildScrollOffset =
+          earliestScrollOffset - paintExtentOf(firstChild!);
       // firstChildScrollOffset may contain double precision error
       if (firstChildScrollOffset < -precisionErrorTolerance) {
         // Let's assume there is no child before the first child. We will
         // correct it on the next layout if it is not.
-        geometry = SliverGeometry(scrollOffsetCorrection: -firstChildScrollOffset);
+        geometry = SliverGeometry(
+          scrollOffsetCorrection: -firstChildScrollOffset,
+        );
         final SliverMultiBoxAdaptorParentData childParentData =
             firstChild!.parentData! as SliverMultiBoxAdaptorParentData;
         childParentData.layoutOffset = 0.0;
@@ -213,7 +225,10 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
       assert(earliestUsefulChild == firstChild);
       leadingChildWithLayout = earliestUsefulChild;
       trailingChildWithLayout ??= earliestUsefulChild;
-      childCrossAxisExtent = math.max(childCrossAxisExtent, earliestUsefulChild.size.height);
+      childCrossAxisExtent = math.max(
+        childCrossAxisExtent,
+        earliestUsefulChild.size.height,
+      );
     }
 
     assert(childScrollOffset(firstChild!)! > -precisionErrorTolerance);
@@ -228,16 +243,22 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
         // We correct one child at a time. If there are more children before
         // the earliestUsefulChild, we will correct it once the scroll offset
         // reaches zero again.
-        earliestUsefulChild = insertAndLayoutLeadingChild(childConstraints, parentUsesSize: true);
+        earliestUsefulChild = insertAndLayoutLeadingChild(
+          childConstraints,
+          parentUsesSize: true,
+        );
         assert(earliestUsefulChild != null);
-        final double firstChildScrollOffset = earliestScrollOffset - paintExtentOf(firstChild!);
+        final double firstChildScrollOffset =
+            earliestScrollOffset - paintExtentOf(firstChild!);
         final SliverMultiBoxAdaptorParentData childParentData =
             firstChild!.parentData! as SliverMultiBoxAdaptorParentData;
         childParentData.layoutOffset = 0.0;
         // We only need to correct if the leading child actually has a
         // paint extent.
         if (firstChildScrollOffset < -precisionErrorTolerance) {
-          geometry = SliverGeometry(scrollOffsetCorrection: -firstChildScrollOffset);
+          geometry = SliverGeometry(
+            scrollOffsetCorrection: -firstChildScrollOffset,
+          );
           return;
         }
       }
@@ -258,7 +279,10 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
       earliestUsefulChild!.layout(childConstraints, parentUsesSize: true);
       leadingChildWithLayout = earliestUsefulChild;
       trailingChildWithLayout = earliestUsefulChild;
-      childCrossAxisExtent = math.max(childCrossAxisExtent, earliestUsefulChild.size.height);
+      childCrossAxisExtent = math.max(
+        childCrossAxisExtent,
+        earliestUsefulChild.size.height,
+      );
     }
 
     // Here, earliestUsefulChild is still the first child, it's got a
@@ -298,7 +322,10 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
           // Lay out the child.
           child!.layout(childConstraints, parentUsesSize: true);
         }
-        childCrossAxisExtent = math.max(childCrossAxisExtent, child!.size.height);
+        childCrossAxisExtent = math.max(
+          childCrossAxisExtent,
+          child!.size.height,
+        );
         trailingChildWithLayout = child;
       }
       assert(child != null);
@@ -319,7 +346,8 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
         // we want to make sure we keep the last child around so we know the end scroll offset
         collectGarbage(leadingGarbage - 1, 0);
         assert(firstChild == lastChild);
-        final double extent = childScrollOffset(lastChild!)! + paintExtentOf(lastChild!);
+        final double extent =
+            childScrollOffset(lastChild!)! + paintExtentOf(lastChild!);
         geometry = SliverGeometry(scrollExtent: extent, maxPaintExtent: extent);
         return;
       }
@@ -359,7 +387,10 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
         leadingScrollOffset: childScrollOffset(firstChild!),
         trailingScrollOffset: endScrollOffset,
       );
-      assert(estimatedMaxScrollOffset >= endScrollOffset - childScrollOffset(firstChild!)!);
+      assert(
+        estimatedMaxScrollOffset >=
+            endScrollOffset - childScrollOffset(firstChild!)!,
+      );
     }
     final double paintExtent = calculatePaintOffset(
       constraints,
@@ -381,7 +412,8 @@ class RenderUnconstrainedSliverList extends RenderSliverMultiBoxAdaptor {
       crossAxisExtent: childCrossAxisExtent,
       // Conservative to avoid flickering away the clip during scroll.
       hasVisualOverflow:
-          endScrollOffset > targetEndScrollOffsetForPaint || constraints.scrollOffset > 0.0,
+          endScrollOffset > targetEndScrollOffsetForPaint ||
+          constraints.scrollOffset > 0.0,
     );
 
     // We may have started the layout while scrolled to the end, which would not

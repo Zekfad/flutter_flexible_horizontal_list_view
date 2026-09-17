@@ -36,7 +36,10 @@ void main() {
       expect(
         semantics,
         includesNodeWith(
-          actions: <SemanticsAction>[SemanticsAction.scrollLeft, SemanticsAction.scrollToOffset],
+          actions: <SemanticsAction>[
+            SemanticsAction.scrollLeft,
+            SemanticsAction.scrollToOffset,
+          ],
         ),
       );
 
@@ -46,7 +49,10 @@ void main() {
       expect(
         semantics,
         includesNodeWith(
-          actions: <SemanticsAction>[SemanticsAction.scrollRight, SemanticsAction.scrollToOffset],
+          actions: <SemanticsAction>[
+            SemanticsAction.scrollRight,
+            SemanticsAction.scrollToOffset,
+          ],
         ),
       );
 
@@ -75,7 +81,10 @@ void main() {
       expect(
         semantics,
         includesNodeWith(
-          actions: <SemanticsAction>[SemanticsAction.scrollRight, SemanticsAction.scrollToOffset],
+          actions: <SemanticsAction>[
+            SemanticsAction.scrollRight,
+            SemanticsAction.scrollToOffset,
+          ],
         ),
       );
 
@@ -85,7 +94,10 @@ void main() {
       expect(
         semantics,
         includesNodeWith(
-          actions: <SemanticsAction>[SemanticsAction.scrollLeft, SemanticsAction.scrollToOffset],
+          actions: <SemanticsAction>[
+            SemanticsAction.scrollLeft,
+            SemanticsAction.scrollToOffset,
+          ],
         ),
       );
 

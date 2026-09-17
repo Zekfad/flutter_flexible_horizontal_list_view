@@ -42,12 +42,14 @@ class SliverPrototypeList extends SliverMultiBoxAdaptorWidget {
 
   @override
   RenderSliverMultiBoxAdaptor createRenderObject(BuildContext context) {
-    final _SliverPrototypeListElement element = context as _SliverPrototypeListElement;
+    final _SliverPrototypeListElement element =
+        context as _SliverPrototypeListElement;
     return _RenderSliverPrototypeList(childManager: element);
   }
 
   @override
-  SliverMultiBoxAdaptorElement createElement() => _SliverPrototypeListElement(this);
+  SliverMultiBoxAdaptorElement createElement() =>
+      _SliverPrototypeListElement(this);
 }
 
 class _SliverPrototypeListElement extends SliverMultiBoxAdaptorElement {
@@ -61,7 +63,10 @@ class _SliverPrototypeListElement extends SliverMultiBoxAdaptorElement {
   static final Object _prototypeSlot = Object();
 
   @override
-  void insertRenderObjectChild(covariant RenderObject child, covariant Object slot) {
+  void insertRenderObjectChild(
+    covariant RenderObject child,
+    covariant Object slot,
+  ) {
     if (slot == _prototypeSlot) {
       assert(child is RenderBox);
       renderObject.child = child as RenderBox;
@@ -127,8 +132,9 @@ class _SliverPrototypeListElement extends SliverMultiBoxAdaptorElement {
 }
 
 class _RenderSliverPrototypeList extends RenderSliverMultiBoxAdaptor {
-  _RenderSliverPrototypeList({required _SliverPrototypeListElement childManager})
-    : super(childManager: childManager);
+  _RenderSliverPrototypeList({
+    required _SliverPrototypeListElement childManager,
+  }) : super(childManager: childManager);
 
   RenderBox? _child;
   RenderBox? get child => _child;
@@ -145,7 +151,9 @@ class _RenderSliverPrototypeList extends RenderSliverMultiBoxAdaptor {
 
   double get itemExtent {
     assert(child != null && child!.hasSize);
-    return constraints.axis == Axis.vertical ? child!.size.height : child!.size.width;
+    return constraints.axis == Axis.vertical
+        ? child!.size.height
+        : child!.size.width;
   }
 
   /// The layout offset for the child with the given index.
@@ -169,7 +177,8 @@ class _RenderSliverPrototypeList extends RenderSliverMultiBoxAdaptor {
     if (itemExtent > 0.0) {
       final double actual = scrollOffset / itemExtent;
       final int round = actual.round();
-      if ((actual * itemExtent - round * itemExtent).abs() < precisionErrorTolerance) {
+      if ((actual * itemExtent - round * itemExtent).abs() <
+          precisionErrorTolerance) {
         return round;
       }
       return actual.floor();
@@ -188,7 +197,8 @@ class _RenderSliverPrototypeList extends RenderSliverMultiBoxAdaptor {
     if (itemExtent > 0.0) {
       final double actual = scrollOffset / itemExtent - 1;
       final int round = actual.round();
-      if ((actual * itemExtent - round * itemExtent).abs() < precisionErrorTolerance) {
+      if ((actual * itemExtent - round * itemExtent).abs() <
+          precisionErrorTolerance) {
         return math.max(0, round);
       }
       return math.max(0, actual.ceil());
@@ -257,7 +267,8 @@ class _RenderSliverPrototypeList extends RenderSliverMultiBoxAdaptor {
   void performLayout() {
     final SliverConstraints constraints = this.constraints;
 
-    final BoxConstraints prototypeChildConstraints = constraints.axis == Axis.horizontal
+    final BoxConstraints prototypeChildConstraints =
+        constraints.axis == Axis.horizontal
         ? BoxConstraints(
             minHeight: 0.0,
             maxHeight: constraints.crossAxisExtent,
@@ -277,22 +288,25 @@ class _RenderSliverPrototypeList extends RenderSliverMultiBoxAdaptor {
     childManager.didStartLayout();
     childManager.setDidUnderflow(false);
 
-    final double scrollOffset = constraints.scrollOffset + constraints.cacheOrigin;
+    final double scrollOffset =
+        constraints.scrollOffset + constraints.cacheOrigin;
     assert(scrollOffset >= 0.0);
     final double remainingExtent = constraints.remainingCacheExtent;
     assert(remainingExtent >= 0.0);
     final double targetEndScrollOffset = scrollOffset + remainingExtent;
 
     final int firstIndex = getMinChildIndexForScrollOffset(scrollOffset);
-    final int? targetLastIndex =
-        targetEndScrollOffset.isFinite
-            ? getMaxChildIndexForScrollOffset(targetEndScrollOffset)
-            : null;
+    final int? targetLastIndex = targetEndScrollOffset.isFinite
+        ? getMaxChildIndexForScrollOffset(targetEndScrollOffset)
+        : null;
 
     if (firstChild != null) {
-      final int leadingGarbage = calculateLeadingGarbage(firstIndex: firstIndex);
-      final int trailingGarbage =
-          targetLastIndex != null ? calculateTrailingGarbage(lastIndex: targetLastIndex) : 0;
+      final int leadingGarbage = calculateLeadingGarbage(
+        firstIndex: firstIndex,
+      );
+      final int trailingGarbage = targetLastIndex != null
+          ? calculateTrailingGarbage(lastIndex: targetLastIndex)
+          : 0;
       collectGarbage(leadingGarbage, trailingGarbage);
     } else {
       collectGarbage(0, 0);
@@ -350,7 +364,10 @@ class _RenderSliverPrototypeList extends RenderSliverMultiBoxAdaptor {
     ) {
       RenderBox? child = childAfter(trailingChildWithLayout!);
       if (child == null || indexOf(child) != index) {
-        child = insertAndLayoutChild(childConstraints, after: trailingChildWithLayout);
+        child = insertAndLayoutChild(
+          childConstraints,
+          after: trailingChildWithLayout,
+        );
         if (child == null) {
           // We have run out of children.
           estimatedMaxScrollOffset = indexToLayoutOffset(index);
@@ -370,12 +387,12 @@ class _RenderSliverPrototypeList extends RenderSliverMultiBoxAdaptor {
 
     final int lastIndex = indexOf(lastChild!);
     final double leadingScrollOffset = indexToLayoutOffset(firstIndex);
-    final double trailingScrollOffset = indexToLayoutOffset(
-      lastIndex + 1,
-    );
+    final double trailingScrollOffset = indexToLayoutOffset(lastIndex + 1);
 
     assert(
-      firstIndex == 0 || childScrollOffset(firstChild!)! - scrollOffset <= precisionErrorTolerance,
+      firstIndex == 0 ||
+          childScrollOffset(firstChild!)! - scrollOffset <=
+              precisionErrorTolerance,
     );
     assert(debugAssertChildListIsNonEmptyAndContiguous());
     assert(indexOf(firstChild!) == firstIndex);
@@ -406,12 +423,9 @@ class _RenderSliverPrototypeList extends RenderSliverMultiBoxAdaptor {
 
     final double targetEndScrollOffsetForPaint =
         constraints.scrollOffset + constraints.remainingPaintExtent;
-    final int? targetLastIndexForPaint =
-        targetEndScrollOffsetForPaint.isFinite
-            ? getMaxChildIndexForScrollOffset(
-              targetEndScrollOffsetForPaint,
-            )
-            : null;
+    final int? targetLastIndexForPaint = targetEndScrollOffsetForPaint.isFinite
+        ? getMaxChildIndexForScrollOffset(targetEndScrollOffsetForPaint)
+        : null;
 
     double crossAxisExtent;
     switch (constraints.axis) {
@@ -429,7 +443,8 @@ class _RenderSliverPrototypeList extends RenderSliverMultiBoxAdaptor {
       crossAxisExtent: crossAxisExtent,
       // Conservative to avoid flickering away the clip during scroll.
       hasVisualOverflow:
-          (targetLastIndexForPaint != null && lastIndex >= targetLastIndexForPaint) ||
+          (targetLastIndexForPaint != null &&
+              lastIndex >= targetLastIndexForPaint) ||
           constraints.scrollOffset > 0.0,
     );
 
