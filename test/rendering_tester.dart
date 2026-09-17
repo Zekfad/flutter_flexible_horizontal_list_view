@@ -367,6 +367,12 @@ class FakeTicker implements Ticker {
   bool get shouldScheduleTick => throw UnimplementedError();
 
   @override
+  bool get forceFrames => throw UnimplementedError();
+
+  @override
+  set forceFrames(bool value) => throw UnimplementedError();
+
+  @override
   void dispose() {}
 
   @override
