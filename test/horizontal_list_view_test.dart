@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flexible_horizontal_list_view/src/horizontal_list_view.dart';
 
@@ -124,7 +124,8 @@ void main() {
                 finderCalled = true;
                 return null;
               },
-              separatorBuilder: (BuildContext _, int __) => const Divider(),
+              separatorBuilder: (BuildContext _, int _) =>
+                  SizedBox(height: 1, width: .infinity),
             );
           },
         ),
@@ -466,7 +467,7 @@ void main() {
         textDirection: TextDirection.ltr,
         child: HorizontalListView.builder(
           itemCount: 10,
-          itemBuilder: (BuildContext _, int __) => Container(width: 2000.0),
+          itemBuilder: (BuildContext _, int _) => Container(width: 2000.0),
           clipBehavior: Clip.antiAlias,
         ),
       ),
@@ -506,8 +507,9 @@ void main() {
         textDirection: TextDirection.ltr,
         child: HorizontalListView.separated(
           itemCount: 10,
-          itemBuilder: (BuildContext _, int __) => Container(width: 2000.0),
-          separatorBuilder: (BuildContext _, int __) => const Divider(),
+          itemBuilder: (BuildContext _, int _) => Container(width: 2000.0),
+          separatorBuilder: (BuildContext _, int _) =>
+              const SizedBox(height: 1, width: .infinity),
           clipBehavior: Clip.antiAlias,
         ),
       ),
